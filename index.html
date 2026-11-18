@@ -71,14 +71,26 @@
               <div class="stage-bank"><span>ROUND POINTS</span><strong id="display-bank">0</strong></div>
               <div class="stage-strikes"><span>STRIKES</span><div id="display-strikes" aria-label="0 of 3 strikes"><b>×</b><b>×</b><b>×</b></div></div>
             </div>
-            <p class="board-hint">HOST TIP: CLICK A NUMBER TO REVEAL AN ANSWER</p>
+            <p class="board-hint">THE PLAYER SCREEN SHOWS ONLY ANSWERS YOU REVEAL</p>
+          </section>
+
+          <section class="control-card host-answer-key" aria-labelledby="host-key-title">
+            <div class="key-header">
+              <div>
+                <span class="key-kicker">FOR THE HOST ONLY</span>
+                <h3 id="host-key-title">Answer key</h3>
+                <p>Hear a correct answer? Click Reveal. For a wrong answer, add a strike.</p>
+              </div>
+              <span class="key-badge">★ ALL ANSWERS</span>
+            </div>
+            <div class="key-list" id="host-key-list"></div>
           </section>
 
           <aside class="control-column" aria-label="Game controls">
             <section class="control-card guess-card">
               <div class="control-icon purple-icon" aria-hidden="true">?</div>
-              <h3>What’s your answer?</h3>
-              <p>Give us your best guess. Is it on the board?</p>
+              <h3>Enter a guess</h3>
+              <p>Or reveal a correct answer directly from your answer key.</p>
               <form id="guess-form" autocomplete="off">
                 <label class="sr-only" for="guess-input">Your answer</label>
                 <input id="guess-input" type="text" placeholder="Type your answer..." maxlength="80" required />

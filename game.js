@@ -49,15 +49,31 @@ function render() {
     const tile = document.createElement('button');
     tile.type = 'button';
     tile.className = `answer-tile${state.revealed.includes(i) ? ' revealed' : ''}`;
-    tile.disabled = isPlayer || state.revealed.includes(i) || state.phase === 'result' || state.phase === 'finished';
-    tile.setAttribute('aria-label', state.revealed.includes(i) ? `Answer ${i + 1}: ${answer}, ${points} points` : `Reveal answer ${i + 1}`);
+    tile.disabled = true;
+    tile.setAttribute('aria-label', state.revealed.includes(i) ? `Answer ${i + 1}: ${answer}, ${points} points` : `Covered answer ${i + 1}`);
     const number = document.createElement('span'); number.className = 'answer-number'; number.textContent = String(i + 1).padStart(2, '0');
     const text = document.createElement('span'); text.className = state.revealed.includes(i) ? 'answer-text' : 'answer-text answer-placeholder'; text.textContent = state.revealed.includes(i) ? answer : '';
     const score = document.createElement('span'); score.className = state.revealed.includes(i) ? 'answer-points' : 'hidden-points'; score.textContent = state.revealed.includes(i) ? points : '';
     tile.append(number, text, score);
-    tile.addEventListener('click', () => reveal(i));
     return tile;
   }));
+
+  if (!isPlayer) {
+    $('host-key-list').replaceChildren(...round.answers.map(([answer, points], i) => {
+      const row = document.createElement('div');
+      row.className = `key-row${state.revealed.includes(i) ? ' key-revealed' : ''}`;
+      const number = document.createElement('span'); number.className = 'key-number'; number.textContent = String(i + 1).padStart(2, '0');
+      const label = document.createElement('span'); label.className = 'key-answer'; label.textContent = answer;
+      const score = document.createElement('span'); score.className = 'key-points'; score.textContent = `${points} PTS`;
+      const button = document.createElement('button'); button.type = 'button'; button.className = 'key-reveal';
+      button.textContent = state.revealed.includes(i) ? 'ON BOARD ✓' : 'REVEAL →';
+      button.setAttribute('aria-label', `Reveal ${answer} for ${points} points`);
+      button.disabled = state.revealed.includes(i) || !['play', 'steal'].includes(state.phase);
+      button.addEventListener('click', () => reveal(i));
+      row.append(number, label, score, button);
+      return row;
+    }));
+  }
 
   for (let i = 0; i < 2; i++) {
     $(`team-${i}`).classList.toggle('active', state.playing === i && !['result', 'finished'].includes(state.phase));

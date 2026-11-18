@@ -125,6 +125,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   transition: filter .18s, transform .18s;
 }
 .answer-tile:not(:disabled):hover { filter: brightness(1.25); transform: scale(1.007); }
+.answer-tile:disabled { opacity: 1; cursor: default; }
 .answer-tile.revealed { background: linear-gradient(180deg, #3384d1 0%, #185eac 55%, #104084 100%); }
 .answer-number { display: grid; place-items: center; flex: none; width: 42px; height: 42px; border: 2px solid #ffe7a0; border-radius: 50%; background: radial-gradient(circle at 35% 22%, #f9d48b, #ae622c 78%); color: #17295d; box-shadow: 0 2px 6px #0008; font: 900 26px 'Barlow Condensed', sans-serif; }
 .answer-text { flex: 1; font: 800 clamp(20px, 2.6vw, 29px) 'Barlow Condensed', sans-serif; letter-spacing: 1px; text-transform: uppercase; text-shadow: 1px 2px 2px #062157; }
@@ -142,6 +143,21 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 
 .control-column { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .control-card { min-width: 0; padding: 22px 26px; border: 2px solid #d3a457; border-radius: 9px; background: linear-gradient(155deg, #103679, #0b255c); box-shadow: inset 0 0 0 2px #769ad05c, 0 10px 24px #020e32a3; }
+.host-answer-key { padding: 23px 27px 27px; }
+.key-header { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 17px; }
+.key-kicker { color: #ffda7e; font: 900 12px 'Barlow Condensed', sans-serif; letter-spacing: 2px; }
+.key-header h3 { margin: 1px 0 0; font: 900 31px 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: .5px; }
+.key-header p { margin: 2px 0 0; color: #bcd2f3; font-size: 12px; }
+.key-badge { flex: none; border: 1px solid #c7a360; border-radius: 4px; padding: 7px 10px; background: #071d50; color: #ffe39a; font: 800 12px 'Barlow Condensed', sans-serif; letter-spacing: 1.3px; }
+.key-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.key-row { min-width: 0; display: flex; align-items: center; gap: 11px; padding: 9px 10px; border: 1px solid #6083b6; border-radius: 5px; background: #061e54; }
+.key-number { flex: none; color: #f7d388; font: 900 19px 'Barlow Condensed', sans-serif; }
+.key-answer { flex: 1; min-width: 0; color: #fff; font: 800 19px 'Barlow Condensed', sans-serif; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.key-points { flex: none; color: #f7d388; font: 800 14px 'Barlow Condensed', sans-serif; white-space: nowrap; }
+.key-reveal { flex: none; min-width: 76px; padding: 7px 8px; border: 1px solid #ffefb0; border-radius: 4px; background: #edba65; color: #14234f; font: 900 12px 'Barlow Condensed', sans-serif; letter-spacing: .4px; white-space: nowrap; }
+.key-reveal:hover:not(:disabled) { background: #ffe09c; }
+.key-revealed { border-color: #59b7a6; background: #0c3d60; }
+.key-revealed .key-reveal { background: #1d655c; color: #d9fff0; border-color: #66bcaa; opacity: 1; }
 .control-icon { width: 32px; height: 32px; display: grid; place-items: center; border: 2px solid #f9d48b; border-radius: 50%; background: #a65d2d; color: #fff1b2; font: 900 23px 'Barlow Condensed', sans-serif; }
 .guess-card h3 { font: 900 24px 'Barlow Condensed', sans-serif; letter-spacing: .8px; text-transform: uppercase; margin: 8px 0 0; }
 .guess-card p { color: #bcd2f3; font-size: 12px; margin: 2px 0 12px; }
@@ -185,7 +201,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .modal-scores span { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 14px 'Barlow Condensed', sans-serif; }
 .modal-scores strong { color: #ffde80; font: 900 29px 'Barlow Condensed', sans-serif; }
 .result-modal .primary-button { width: 100%; }
-.player-view #new-game, .player-view .host-actions, .player-view .control-column, .player-view .board-hint, .player-view .result-modal .primary-button { display: none; }
+.player-view #new-game, .player-view .host-actions, .player-view .host-answer-key, .player-view .control-column, .player-view .board-hint, .player-view .result-modal .primary-button { display: none; }
 .player-view .player-display-label { display: inline; }
 .player-view .answer-tile:disabled { opacity: 1; cursor: default; }
 .player-view .team-name { pointer-events: none; }
@@ -208,6 +224,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   .team-score { min-width: 38px; font-size: 26px; padding: 2px 4px; }
   .game-card { padding: 26px 25px 25px; }
   .control-column { grid-template-columns: 1fr; }
+  .key-list { grid-template-columns: 1fr; }
   .view-bar { margin-left: 3px; margin-right: 3px; }
   .sync-note { display: none; }
 }
@@ -249,6 +266,13 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   .player-view .answer-text { font-size: 21px; }
   .answers-heading { font-size: 10px; }
   .control-card { padding: 18px; }
+  .key-header { align-items: flex-start; }
+  .key-header h3 { font-size: 27px; }
+  .key-badge { display: none; }
+  .key-row { gap: 7px; padding: 8px; }
+  .key-answer { font-size: 17px; }
+  .key-points { font-size: 12px; }
+  .key-reveal { min-width: 69px; padding: 7px 5px; font-size: 11px; }
   .guess-card form { flex-direction: column; }
   .footer { font-size: 10px; letter-spacing: 1px; }
 }
