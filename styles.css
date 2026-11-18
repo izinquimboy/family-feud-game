@@ -148,6 +148,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .key-kicker { color: #ffda7e; font: 900 12px 'Barlow Condensed', sans-serif; letter-spacing: 2px; }
 .key-header h3 { margin: 1px 0 0; font: 900 31px 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: .5px; }
 .key-header p { margin: 2px 0 0; color: #bcd2f3; font-size: 12px; }
+.key-header .key-question { margin-top: 6px; color: #fff0be; font: 800 18px/1.2 'Barlow Condensed', sans-serif; text-transform: uppercase; }
 .key-badge { flex: none; border: 1px solid #c7a360; border-radius: 4px; padding: 7px 10px; background: #071d50; color: #ffe39a; font: 800 12px 'Barlow Condensed', sans-serif; letter-spacing: 1.3px; }
 .key-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
 .key-row { min-width: 0; display: flex; align-items: center; gap: 11px; padding: 9px 10px; border: 1px solid #6083b6; border-radius: 5px; background: #061e54; }

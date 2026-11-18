@@ -34,6 +34,7 @@ function render() {
   const round = rounds[state.round];
   $('round-label').textContent = `ROUND ${String(state.round + 1).padStart(2, '0')} / ${String(rounds.length).padStart(2, '0')}`;
   $('question-title').textContent = round.question;
+  if (!isPlayer) $('host-key-question').textContent = round.question;
   $('answer-count').textContent = `${state.revealed.length} OF ${round.answers.length} REVEALED`;
   $('bank-points').textContent = state.bank;
   $('display-bank').textContent = state.bank;
