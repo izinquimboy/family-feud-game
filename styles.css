@@ -61,6 +61,14 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .intro p { margin: 21px 0 0; font: 800 15px 'Barlow Condensed', sans-serif; letter-spacing: 3px; color: #e3eafa; }
 .intro p strong { color: #ffe08d; }
 
+.view-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 4px 26px 23px; padding: 9px 13px; border: 1px solid #efc9778c; border-radius: 6px; background: #071d50cc; }
+.view-label, .player-display-label { color: #ffe39b; font: 900 13px 'Barlow Condensed', sans-serif; letter-spacing: 1.7px; white-space: nowrap; }
+.view-actions { display: flex; align-items: center; justify-content: flex-end; gap: 15px; }
+.sync-note { color: #abc9ee; font-size: 11px; text-align: right; }
+.view-link { display: inline-block; padding: 7px 12px; border: 1px solid #ffe9ab; border-radius: 4px; background: #e8b65e; color: #142452; text-decoration: none; white-space: nowrap; font: 900 13px 'Barlow Condensed', sans-serif; letter-spacing: .8px; }
+.view-link:hover { background: #ffe0a1; }
+.player-display-label { display: none; color: #b8d3f7; font-size: 11px; }
+
 .scoreboard { display: grid; grid-template-columns: 1fr 72px 1fr; align-items: center; margin: 12px 26px 22px; }
 .team {
   min-width: 0;
@@ -123,6 +131,13 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .answer-placeholder { color: #b3d3ff2e; font-size: 17px; letter-spacing: 13px; text-shadow: none; }
 .answer-points { min-width: 51px; border-left: 2px solid #b1d9ff79; padding: 0 3px 0 10px; text-align: center; color: #fff5c3; font: 900 30px 'Barlow Condensed', sans-serif; text-shadow: 0 0 10px #fff4b3; }
 .hidden-points { width: 51px; }
+.stage-status { display: flex; align-items: center; justify-content: center; gap: 50px; margin: 18px auto 0; }
+.stage-bank, .stage-strikes { display: flex; align-items: center; gap: 10px; }
+.stage-bank > span, .stage-strikes > span { color: #f6d18a; font: 800 13px 'Barlow Condensed', sans-serif; letter-spacing: 1.5px; }
+.stage-bank strong { min-width: 48px; display: inline-block; padding: 2px 7px; border: 2px solid #e8bf73; background: #04133f; color: #ffdf80; text-align: center; font: 900 26px 'Barlow Condensed', sans-serif; }
+#display-strikes { display: flex; gap: 5px; }
+#display-strikes b { display: grid; place-items: center; width: 28px; height: 28px; border: 2px solid #6587b7; background: #07184c; color: #6587b7; font: 900 25px/1 'Barlow Condensed', sans-serif; }
+#display-strikes b.hit { border-color: #ffc5ad; background: #bb202d; color: white; box-shadow: 0 0 12px #ff4c4c; }
 .board-hint { margin: 17px 0 0; text-align: center; color: #acc7ee; font: 700 11px 'Barlow Condensed', sans-serif; letter-spacing: 1.5px; }
 
 .control-column { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
@@ -170,6 +185,16 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .modal-scores span { max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 700 14px 'Barlow Condensed', sans-serif; }
 .modal-scores strong { color: #ffde80; font: 900 29px 'Barlow Condensed', sans-serif; }
 .result-modal .primary-button { width: 100%; }
+.player-view #new-game, .player-view .host-actions, .player-view .control-column, .player-view .board-hint, .player-view .result-modal .primary-button { display: none; }
+.player-view .player-display-label { display: inline; }
+.player-view .answer-tile:disabled { opacity: 1; cursor: default; }
+.player-view .team-name { pointer-events: none; }
+.player-view .team-name:hover { border-color: transparent; }
+.player-view .game-card { padding-bottom: 35px; }
+.player-view .answer-tile { min-height: 70px; }
+.player-view .answer-number { width: 49px; height: 49px; }
+.player-view .answer-text { font-size: clamp(24px, 3.4vw, 34px); }
+.player-view .stage-status { margin-top: 27px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
 
 @media (max-width: 730px) {
@@ -183,6 +208,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   .team-score { min-width: 38px; font-size: 26px; padding: 2px 4px; }
   .game-card { padding: 26px 25px 25px; }
   .control-column { grid-template-columns: 1fr; }
+  .view-bar { margin-left: 3px; margin-right: 3px; }
+  .sync-note { display: none; }
 }
 @media (max-width: 480px) {
   .topbar { min-height: 62px; }
@@ -193,6 +220,10 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   .show-logo h1 span:last-child { font-size: 53px; margin-left: 45px; }
   .intro p { font-size: 12px; letter-spacing: 2px; }
   .scoreboard { grid-template-columns: 1fr 35px 1fr; margin-top: 15px; }
+  .view-bar { margin-bottom: 24px; }
+  .view-label { font-size: 11px; }
+  .view-link { font-size: 11px; padding: 7px; }
+  .player-display-label { font-size: 9px; letter-spacing: .7px; }
   .team { height: 70px; }
   .team-name { font-size: 16px; }
   .team-caption { font-size: 9px; letter-spacing: 1px; }
@@ -208,6 +239,14 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
   .answer-placeholder { letter-spacing: 5px; }
   .answer-points { min-width: 40px; font-size: 25px; padding-left: 6px; }
   .hidden-points { width: 40px; }
+  .stage-status { gap: 14px; justify-content: space-between; }
+  .stage-bank, .stage-strikes { gap: 5px; }
+  .stage-bank > span, .stage-strikes > span { font-size: 10px; letter-spacing: .5px; }
+  #display-strikes { gap: 3px; }
+  #display-strikes b { width: 22px; height: 24px; font-size: 21px; }
+  .player-view .answer-tile { min-height: 60px; }
+  .player-view .answer-number { width: 38px; height: 38px; }
+  .player-view .answer-text { font-size: 21px; }
   .answers-heading { font-size: 10px; }
   .control-card { padding: 18px; }
   .guess-card form { flex-direction: column; }

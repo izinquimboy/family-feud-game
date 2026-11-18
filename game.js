@@ -11,6 +11,9 @@ const rounds = [
 ];
 
 const $ = (id) => document.getElementById(id);
+const isPlayer = new URLSearchParams(window.location.search).get('view') === 'player';
+document.body.classList.toggle('player-view', isPlayer);
+const channel = typeof BroadcastChannel === 'undefined' ? null : new BroadcastChannel('family-feud-display');
 const initialState = () => ({ round: 0, scores: [0, 0], names: ['Team A', 'Team B'], playing: 0, owner: 0, revealed: [], strikes: 0, bank: 0, phase: 'play' });
 let state = initialState();
 try {
@@ -18,7 +21,11 @@ try {
   if (saved && Number.isInteger(saved.round) && saved.round >= 0 && saved.round < rounds.length && Array.isArray(saved.scores) && saved.scores.length === 2 && Array.isArray(saved.revealed) && ['play', 'steal', 'result', 'finished'].includes(saved.phase)) state = saved;
 } catch (_) { /* A disabled or invalid storage entry should not stop the game. */ }
 
-function save() { try { localStorage.setItem('family-feud-game', JSON.stringify(state)); } catch (_) { /* Storage is optional. */ } }
+function save() {
+  if (isPlayer) return;
+  try { localStorage.setItem('family-feud-game', JSON.stringify(state)); } catch (_) { /* Storage is optional. */ }
+  channel?.postMessage({ type: 'state', state });
+}
 function name(team) { return state.names[team]?.trim() || `Team ${team === 0 ? 'A' : 'B'}`; }
 function normalize(text) { return text.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim(); }
 function feedback(message, type = '') { $('feedback').textContent = message; $('feedback').className = `feedback ${type}`; }
@@ -29,9 +36,12 @@ function render() {
   $('question-title').textContent = round.question;
   $('answer-count').textContent = `${state.revealed.length} OF ${round.answers.length} REVEALED`;
   $('bank-points').textContent = state.bank;
+  $('display-bank').textContent = state.bank;
   $('strike-count').textContent = `${state.strikes} / 3`;
   $('strikes').setAttribute('aria-label', `${state.strikes} of 3 strikes`);
   [...$('strikes').children].forEach((el, i) => el.classList.toggle('hit', i < state.strikes));
+  $('display-strikes').setAttribute('aria-label', `${state.strikes} of 3 strikes`);
+  [...$('display-strikes').children].forEach((el, i) => el.classList.toggle('hit', i < state.strikes));
   $('round-progress').replaceChildren(...round.answers.map((_, i) => { const bar = document.createElement('span'); bar.classList.toggle('done', state.revealed.includes(i)); return bar; }));
 
   const board = $('answer-board');
@@ -39,7 +49,7 @@ function render() {
     const tile = document.createElement('button');
     tile.type = 'button';
     tile.className = `answer-tile${state.revealed.includes(i) ? ' revealed' : ''}`;
-    tile.disabled = state.revealed.includes(i) || state.phase === 'result' || state.phase === 'finished';
+    tile.disabled = isPlayer || state.revealed.includes(i) || state.phase === 'result' || state.phase === 'finished';
     tile.setAttribute('aria-label', state.revealed.includes(i) ? `Answer ${i + 1}: ${answer}, ${points} points` : `Reveal answer ${i + 1}`);
     const number = document.createElement('span'); number.className = 'answer-number'; number.textContent = String(i + 1).padStart(2, '0');
     const text = document.createElement('span'); text.className = state.revealed.includes(i) ? 'answer-text' : 'answer-text answer-placeholder'; text.textContent = state.revealed.includes(i) ? answer : '';
@@ -53,22 +63,24 @@ function render() {
     $(`team-${i}`).classList.toggle('active', state.playing === i && !['result', 'finished'].includes(state.phase));
     $(`score-${i}`).textContent = state.scores[i];
     if (document.activeElement !== $(`name-${i}`)) $(`name-${i}`).value = state.names[i];
+    $(`name-${i}`).readOnly = isPlayer;
     $(`tag-${i}`).textContent = state.phase === 'steal' ? 'STEALING' : 'PLAYING';
   }
   const active = state.phase === 'play' || state.phase === 'steal';
-  $('guess-input').disabled = !active;
-  $('submit-guess').disabled = !active;
-  $('strike-button').disabled = !active;
-  $('bank-button').disabled = !active || state.phase === 'steal';
+  $('guess-input').disabled = !active || isPlayer;
+  $('submit-guess').disabled = !active || isPlayer;
+  $('strike-button').disabled = !active || isPlayer;
+  $('bank-button').disabled = !active || isPlayer || state.phase === 'steal';
   $('bank-button').textContent = state.phase === 'steal' ? 'Steal in progress' : 'Bank points & end round →';
   $('round-note').textContent = state.phase === 'steal' ? `${name(state.playing)} gets one guess to steal the round!` : 'Got them all? Bank your points to move on.';
   $('result-modal').classList.toggle('hidden', active);
   if (!active) renderResult();
+  $('view-label').textContent = isPlayer ? '★ PLAYER SCREEN' : '★ HOST CONTROLS';
   save();
 }
 
 function reveal(index) {
-  if (!['play', 'steal'].includes(state.phase) || state.revealed.includes(index)) return;
+  if (isPlayer || !['play', 'steal'].includes(state.phase) || state.revealed.includes(index)) return;
   const [answer, points] = rounds[state.round].answers[index];
   state.revealed.push(index);
   if (state.phase === 'steal') {
@@ -85,6 +97,7 @@ function reveal(index) {
 }
 
 function strike() {
+  if (isPlayer) return;
   if (state.phase === 'steal') {
     feedback(`No steal! ${name(state.owner)} takes the ${state.bank} points.`, 'error');
     finishRound(state.owner);
@@ -103,6 +116,7 @@ function strike() {
 }
 
 function finishRound(winner) {
+  if (isPlayer) return;
   state.lastWinner = winner;
   state.scores[winner] += state.bank;
   state.phase = state.round === rounds.length - 1 ? 'finished' : 'result';
@@ -119,7 +133,7 @@ function renderResult() {
     $('result-description').textContent = tied ? 'An incredible game — both teams finish even!' : 'The final scores are in. Thanks for playing!';
   } else {
     $('result-title').textContent = `${name(state.lastWinner)} takes the round!`;
-    $('result-description').textContent = `${state.bank} points banked. Ready for the next question?`;
+    $('result-description').textContent = `${state.bank} points banked. ${isPlayer ? 'Waiting for the host to start the next round.' : 'Ready for the next question?'}`;
   }
   $('modal-scores').replaceChildren(...[0, 1].map(i => {
     const item = document.createElement('div'); const label = document.createElement('span'); const score = document.createElement('strong');
@@ -130,6 +144,7 @@ function renderResult() {
 
 $('guess-form').addEventListener('submit', (event) => {
   event.preventDefault();
+  if (isPlayer) return;
   const guess = normalize($('guess-input').value);
   if (!guess) return;
   $('guess-input').value = '';
@@ -143,8 +158,9 @@ $('guess-form').addEventListener('submit', (event) => {
   else strike();
 });
 $('strike-button').addEventListener('click', strike);
-$('bank-button').addEventListener('click', () => { if (state.phase === 'play') finishRound(state.playing); });
+$('bank-button').addEventListener('click', () => { if (!isPlayer && state.phase === 'play') finishRound(state.playing); });
 $('next-button').addEventListener('click', () => {
+  if (isPlayer) return;
   if (state.phase === 'finished') { state = initialState(); feedback('New game started. Make it count!'); }
   else {
     state.round++;
@@ -160,8 +176,20 @@ $('next-button').addEventListener('click', () => {
   render(); $('guess-input').focus();
 });
 $('new-game').addEventListener('click', () => {
+  if (isPlayer) return;
   if (!confirm('Start a new game? Current scores and progress will be reset.')) return;
   state = initialState(); feedback('New game started. Make it count!'); render();
 });
-for (let i = 0; i < 2; i++) $('name-' + i).addEventListener('input', (event) => { state.names[i] = event.target.value; save(); });
+for (let i = 0; i < 2; i++) $('name-' + i).addEventListener('input', (event) => { if (!isPlayer) { state.names[i] = event.target.value; save(); } });
+if (channel) {
+  channel.addEventListener('message', (event) => {
+    if (isPlayer && event.data?.type === 'state') { state = event.data.state; render(); }
+    if (!isPlayer && event.data?.type === 'request') channel.postMessage({ type: 'state', state });
+  });
+  if (isPlayer) channel.postMessage({ type: 'request' });
+}
+if (isPlayer) window.addEventListener('storage', (event) => {
+  if (event.key !== 'family-feud-game' || !event.newValue) return;
+  try { state = JSON.parse(event.newValue); render(); } catch (_) { /* Ignore invalid cross-tab data. */ }
+});
 render();

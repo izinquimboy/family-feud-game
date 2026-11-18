@@ -32,6 +32,15 @@
           <p>THE SURVEY SAYS... <strong>IT’S GAME TIME!</strong></p>
         </section>
 
+        <nav class="view-bar" aria-label="Game screen">
+          <span class="view-label" id="view-label">★ HOST CONTROLS</span>
+          <div class="view-actions host-actions">
+            <span class="sync-note">Open the display in another tab or window on this browser.</span>
+            <a class="view-link" href="?view=player" target="_blank" rel="noopener">OPEN PLAYER SCREEN ↗</a>
+          </div>
+          <span class="player-display-label">LIVE DISPLAY · CONTROLLED BY HOST</span>
+        </nav>
+
         <section class="scoreboard" aria-label="Scoreboard">
           <div class="team team-one active" id="team-0">
             <div class="team-details"><span class="team-avatar team-avatar-one">★</span><div><span class="team-caption">FAMILY ONE</span><input class="team-name" id="name-0" aria-label="Team one name" maxlength="20" value="Team A" /></div></div>
@@ -58,6 +67,10 @@
 
             <div class="answers-heading"><span>TOP ANSWERS ON THE BOARD</span><span>POINTS</span></div>
             <div class="answer-board" id="answer-board" aria-label="Answer board"></div>
+            <div class="stage-status" aria-label="Round status">
+              <div class="stage-bank"><span>ROUND POINTS</span><strong id="display-bank">0</strong></div>
+              <div class="stage-strikes"><span>STRIKES</span><div id="display-strikes" aria-label="0 of 3 strikes"><b>×</b><b>×</b><b>×</b></div></div>
+            </div>
             <p class="board-hint">HOST TIP: CLICK A NUMBER TO REVEAL AN ANSWER</p>
           </section>
 
