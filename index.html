@@ -3,12 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0e0b28" />
+    <meta name="theme-color" content="#071349" />
     <meta name="description" content="Play a nine-round Family Feud game with friends and family." />
     <title>Family Feud — Game Night</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800&family=Lobster&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
     <script src="game.js" defer></script>
   </head>
@@ -16,31 +16,31 @@
     <div class="page-shell">
       <header class="topbar">
         <a class="brand" href="./" aria-label="Family Feud, home">
-          <span class="brand-mark" aria-hidden="true">✳</span>
-          <span>family<span class="brand-accent">feud.</span></span>
+          <span class="brand-mark" aria-hidden="true">★</span>
+          <span>FAMILY FEUD <small>GAME NIGHT</small></span>
         </a>
         <div class="topbar-right">
-          <span class="edition"><span class="edition-dot"></span> GAME NIGHT EDITION</span>
-          <button class="text-button" id="new-game" type="button">↻ <span>New game</span></button>
+          <span class="edition"><span class="edition-dot"></span> THE SURVEY SAYS...</span>
+          <button class="text-button" id="new-game" type="button">↻ <span>NEW GAME</span></button>
         </div>
       </header>
 
       <main>
         <section class="intro" aria-label="Game introduction">
-          <div class="eyebrow"><span class="sparkle">✦</span> THE SURVEY SAYS...</div>
-          <h1>Let’s play <em>Family Feud!</em></h1>
-          <p>Two teams. Nine rounds. One big bragging right.</p>
+          <div class="marquee-line" aria-hidden="true">★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★ ★</div>
+          <div class="show-logo"><h1><span>Family</span><span>Feud</span></h1></div>
+          <p>THE SURVEY SAYS... <strong>IT’S GAME TIME!</strong></p>
         </section>
 
         <section class="scoreboard" aria-label="Scoreboard">
           <div class="team team-one active" id="team-0">
-            <div class="team-details"><span class="team-avatar team-avatar-one">A</span><div><span class="team-caption">TEAM ONE</span><input class="team-name" id="name-0" aria-label="Team one name" maxlength="20" value="Team A" /></div></div>
+            <div class="team-details"><span class="team-avatar team-avatar-one">★</span><div><span class="team-caption">FAMILY ONE</span><input class="team-name" id="name-0" aria-label="Team one name" maxlength="20" value="Team A" /></div></div>
             <div class="team-score" id="score-0">0</div>
             <span class="playing-tag" id="tag-0">PLAYING</span>
           </div>
           <div class="score-divider" aria-hidden="true"><span>VS</span></div>
           <div class="team team-two" id="team-1">
-            <div class="team-details"><span class="team-avatar team-avatar-two">B</span><div><span class="team-caption">TEAM TWO</span><input class="team-name" id="name-1" aria-label="Team two name" maxlength="20" value="Team B" /></div></div>
+            <div class="team-details"><span class="team-avatar team-avatar-two">★</span><div><span class="team-caption">FAMILY TWO</span><input class="team-name" id="name-1" aria-label="Team two name" maxlength="20" value="Team B" /></div></div>
             <div class="team-score" id="score-1">0</div>
             <span class="playing-tag" id="tag-1">PLAYING</span>
           </div>
@@ -52,30 +52,31 @@
               <span class="round-pill" id="round-label">ROUND 01 / 09</span>
               <span class="answer-count" id="answer-count">0 OF 5 REVEALED</span>
             </div>
+            <span class="question-kicker">WE ASKED 100 PEOPLE...</span>
             <h2 id="question-title">Name a reason you’d stay inside on a Saturday.</h2>
             <div class="round-progress" id="round-progress" aria-label="Round progress"></div>
 
-            <div class="answers-heading"><span>THE ANSWER BOARD</span><span>POINTS</span></div>
+            <div class="answers-heading"><span>TOP ANSWERS ON THE BOARD</span><span>POINTS</span></div>
             <div class="answer-board" id="answer-board" aria-label="Answer board"></div>
-            <p class="board-hint">Host tip: click a covered answer to reveal it directly.</p>
+            <p class="board-hint">HOST TIP: CLICK A NUMBER TO REVEAL AN ANSWER</p>
           </section>
 
           <aside class="control-column" aria-label="Game controls">
             <section class="control-card guess-card">
-              <div class="control-icon purple-icon" aria-hidden="true">✦</div>
-              <h3>Take a guess</h3>
-              <p>Type an answer and see if it’s on the board.</p>
+              <div class="control-icon purple-icon" aria-hidden="true">?</div>
+              <h3>What’s your answer?</h3>
+              <p>Give us your best guess. Is it on the board?</p>
               <form id="guess-form" autocomplete="off">
                 <label class="sr-only" for="guess-input">Your answer</label>
                 <input id="guess-input" type="text" placeholder="Type your answer..." maxlength="80" required />
-                <button class="primary-button" id="submit-guess" type="submit">Submit guess <span aria-hidden="true">↗</span></button>
+                <button class="primary-button" id="submit-guess" type="submit">SURVEY SAYS... <span aria-hidden="true">→</span></button>
               </form>
               <div class="feedback" id="feedback" role="status" aria-live="polite">Ready when you are. Make it count!</div>
             </section>
 
             <section class="control-card round-card">
-              <div class="round-card-header"><div class="control-icon orange-icon" aria-hidden="true">✳</div><span class="mini-label">THIS ROUND</span></div>
-              <div class="bank-row"><div><span class="bank-label">Points on the board</span><strong id="bank-points">0</strong></div><span class="bank-symbol" aria-hidden="true">★</span></div>
+              <div class="round-card-header"><div class="control-icon orange-icon" aria-hidden="true">★</div><span class="mini-label">ROUND SCORE</span></div>
+              <div class="bank-row"><div><span class="bank-label">POINTS ON THE BOARD</span><strong id="bank-points">0</strong></div><span class="bank-symbol" aria-hidden="true">★</span></div>
               <div class="strikes-label"><span>STRIKES</span><span id="strike-count">0 / 3</span></div>
               <div class="strikes" id="strikes" aria-label="0 of 3 strikes"><span>×</span><span>×</span><span>×</span></div>
               <button class="secondary-button" id="strike-button" type="button">Add a strike <span aria-hidden="true">×</span></button>
@@ -85,7 +86,7 @@
           </aside>
         </div>
 
-        <footer class="footer"><span>✳ &nbsp; MADE FOR GAME NIGHT</span><span>GOOD LUCK, HAVE FUN <span class="footer-star">✦</span></span></footer>
+        <footer class="footer"><span>★ &nbsp; FAMILY FEUD GAME NIGHT</span><span>GOOD ANSWER! GOOD ANSWER! <span class="footer-star">★</span></span></footer>
       </main>
     </div>
 

@@ -42,7 +42,7 @@ function render() {
     tile.disabled = state.revealed.includes(i) || state.phase === 'result' || state.phase === 'finished';
     tile.setAttribute('aria-label', state.revealed.includes(i) ? `Answer ${i + 1}: ${answer}, ${points} points` : `Reveal answer ${i + 1}`);
     const number = document.createElement('span'); number.className = 'answer-number'; number.textContent = String(i + 1).padStart(2, '0');
-    const text = document.createElement('span'); text.className = state.revealed.includes(i) ? 'answer-text' : 'answer-text answer-placeholder'; text.textContent = state.revealed.includes(i) ? answer : '••••••••';
+    const text = document.createElement('span'); text.className = state.revealed.includes(i) ? 'answer-text' : 'answer-text answer-placeholder'; text.textContent = state.revealed.includes(i) ? answer : '';
     const score = document.createElement('span'); score.className = state.revealed.includes(i) ? 'answer-points' : 'hidden-points'; score.textContent = state.revealed.includes(i) ? points : '';
     tile.append(number, text, score);
     tile.addEventListener('click', () => reveal(i));
